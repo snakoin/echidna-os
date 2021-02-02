@@ -15,7 +15,7 @@ void reverse(char *string) {
     }
 }
 
-void dec_int_to_char(int value, char *str_number) {
+void dec_int_to_char(char value, char *str_number) {
     int i = 0;
     do {
         str_number[i++] = value % 10 + '0';

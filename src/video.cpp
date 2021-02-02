@@ -1,7 +1,10 @@
 #include "types.h"
 #include "io.h"
+#include "std.h"
 
 #include "video.h"
+
+using namespace Screen;
 
 void move_cursor(u8 x, u8 y) {
     u16 cursor_position;
@@ -12,58 +15,127 @@ void move_cursor(u8 x, u8 y) {
     outb(0x3d5, (u8) (cursor_position >> 8));
 }
 
-Video::Video() : screen((unsigned char *) 0xb8000), x(0), y(0), attribute(0b00000111)
-{}
+void Screen::set_blink(bool blink) {
+    inb(0x3da);
+    outb(0x3c0, 0x30);
+    u8 b = inb(0x3c1);
+    if (blink) {
+        outb(0x3c0, (b & 0xf7));
+    } else {
+        outb(0x3c0, (b & 0x8));
+    }
+}
 
-void Video::print_string(const char *string)
+bool Screen::is_blink() {
+    inb(0x3da);
+    outb(0x3c0, 0x30);
+    u8 b = inb(0x3c1);
+    if ((b & 0xf7)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+Terminal::Terminal() {
+    move_cursor(x, y);
+}
+
+void Terminal::clear()
+{
+    for (int i = 0; i < 0xfa0 / 2; i++) {
+        Screen::screen[i * 2] = 0x0;
+        Screen::screen[i * 2 + 1] = Screen::attribute;
+    }
+}
+
+// scroll up the screen n times
+void Terminal::scroll_up(u8 n) {
+    // copy visible lines at the start of the screen
+    for (int line = n; line <= 24; line++) {
+        for (int byte = 0; byte < 80 * 2; byte++) {
+            Screen::screen[(line - n) * 80 * 2 + byte] = Screen::screen[line * 80 * 2 + byte];
+        }
+    }
+    // clear copied lines
+    for (int line = 24; line <= 24; line++) {
+        for (int byte = 0; byte < 80 * 2; byte+=2) {
+            Screen::screen[line * 80 * 2 + byte] = 0;
+            Screen::screen[line * 80 * 2 + byte + 1] = 0x07;
+        }
+    }
+    y -= n;
+    if (y < 0) y = 0;
+}
+
+void Terminal::put_char(unsigned char c)
+{
+    if (c == '\n') {
+        x = 0;
+        y++;
+    } else if (c == '\t') {
+        x = x + 8 - (x % 8);
+    } else if (c == '\r') {
+        x = 0;
+    } else {
+        Screen::screen[x * 2 + y * 2 * 80] = c;
+        Screen::screen[x * 2 + y * 2 * 80 + 1] = Screen::attribute;
+        x++;
+    }
+    if (x >= 80) {
+        x = 0;
+        y++;
+    }
+    if (y > 24) {
+        scroll_up(y - 24);
+    }
+    show_cursor();
+}
+
+void Terminal::print_string(const char *string)
 {
     while (*string != 0) {
         put_char(*string);
         string++;
     }
-    show_cursor();
 }
 
-void Video::clear()
-{
-    for (int i = 0; i < 0xfa0; i++) {
-        screen[i * 2 + 1] = attribute;
+void Terminal::print_string(const char *string, unsigned char attribute) {
+    unsigned char previous_attribute = Screen::attribute;
+    Screen::attribute = attribute;
+    while (*string != 0) {
+        put_char(*string);
+        string++;
     }
+    //show_cursor();
+    Screen::attribute = previous_attribute;
 }
 
-void Video::put_char(unsigned char c)
-{
-    if (c == '\n') {
-        x = 0;
-        y++;
-        return;
+void Terminal::print_string(const char *string, char x, char y) {
+    char previous_x = Screen::x;
+    char previous_y = Screen::y;
+    Screen::x = x;
+    Screen::y = y;
+    while(*string != 0) {
+        put_char(*string);
+        string++;
     }
-    if (c == '\t') {
-        x = x + 8 - (x % 8);
-        return;
-    }
-    if (c == '\r') {
-        x = 0;
-        return;
-    }
-    screen[x * 2 + y * 2 * 80] = c;
-    screen[x * 2 + y * 2 * 80 + 1] = attribute;
-    x++;
-    if (x == 80) {
-        x = 0;
-        y++;
-    }
-    // TODO: scrolling system
-    if (y == 24) {
-        x = 0;
-        y = 0;
-    }
+    Screen::x = previous_x;
+    Screen::y = previous_y;
 }
 
-void Video::set_attribute(unsigned char attribute) {
-    this->attribute = attribute;
+void Terminal::set_attribute(unsigned char attribute) {
+    Screen::attribute = attribute;
 }
 
-void Video::show_cursor(void) {
+void Terminal::show_cursor(void) {
     move_cursor(x, y);
+}
+
+char Terminal::get_x() {
+    return x;
+}
+
+char Terminal::get_y() {
+    return y;
 }

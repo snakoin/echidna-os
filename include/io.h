@@ -12,8 +12,8 @@
 
 #define inb(port) ({ \
         unsigned char _v; \
-        asm volatile ("inb %%dx, %%al" : "=a", (_v) : "d" (port)); \
+        asm volatile ("inb %%dx, %%al" : "=a" (_v) : "d" (port)); \
         _v; \
-        })
+})
 
 #endif
