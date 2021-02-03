@@ -1,7 +1,8 @@
 #ifndef STD_H
 #define STD_H
 
-void dec_int_to_char(char value, char *str_number);
+int strlen(char *str);
+void itoa(int value, char *str, int base);
 void *memcopy(char *dst, char *src, int n);
 
 #endif

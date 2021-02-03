@@ -2,12 +2,11 @@
 #include "gdt.h"
 #include "idt.h"
 #include "io.h"
-#include "std.h"
 
-#define KERNEL_INFOS 0b011100000
-#define KERNEL_WARNINGS 0b00000100
+#define KERNEL_INFOS 0b00001110
+#define KERNEL_DEFAULT 0b00001111
 
-int kernel_main(Screen::Terminal test);
+int kernel_main();
 void init_pic();
 
 extern "C" void kernel_start() {
@@ -25,14 +24,13 @@ extern "C" void kernel_start() {
     asm("movw $0x18, %ax\n\tmovw %ax, %ss\n\tmovl $0x20000, %esp\n");
     terminal.print_string("kernel: gdt loaded!\n", KERNEL_INFOS);
 
-    kernel_main(terminal);
+    kernel_main();
 }
 
-int kernel_main(Screen::Terminal test) {
+int kernel_main() {
     sti;
     Screen::Terminal terminal;
-    terminal.print_string("kernel: warning!\n", KERNEL_WARNINGS);
-    terminal.print_string("Welcome to Echidna!\n");
-    terminal.print_string("Find the project on github.com/Filadelphila/echidnaOS\n");
+    terminal.print_string("EchidnaOS from Filadelphila\n", KERNEL_DEFAULT);
+    terminal.print_string("Find the project on github.com/Filadelphila/echidnaOS\n", KERNEL_DEFAULT);
     while (1);
 }

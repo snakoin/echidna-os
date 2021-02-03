@@ -3,8 +3,6 @@
 #include "io.h"
 #include "std.h"
 
-//Video::Terminal terminal((unsigned char *) 0xb8000);
-
 extern "C" void isr_default_int(void) {
     return;
 }
@@ -16,11 +14,11 @@ extern "C" void isr_kbd_int(void) {
         i = inb(0x64);
     } while((i & 0x01) == 0);
     i = inb(0x60);
-    if (i < 10) {
-        terminal.scroll_up(4);
-        return;
-    }
     if (i < 0x80) {
-        terminal.print_string("key pressed\n", 0b00001110);
+        char number[5];
+        itoa(i, number, 16);
+        terminal.print_string("0x", 0b00000111);
+        terminal.print_string(number, 0b00000111);
+        terminal.put_char('\n');
     }
 }

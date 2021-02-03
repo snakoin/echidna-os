@@ -1,27 +1,38 @@
 #include "std.h"
 
-int strlen(char *string) {
+int strlen(char *str) {
     int size = 0;
-    while (string[size] != '\0') size++;
+    while (*str++ != '\0') size++;
     return size;
 }
 
-void reverse(char *string) {
-    char c;
-    for (int i = 0, j = strlen(string)-1; i < j; i++, j--) {
-        c = string[i];
-        string[i] = string[j];
-        string[j] = c;
+int abs(int value) {
+    if (value < 0) {
+        return -value;
+    } else {
+        return value;
     }
 }
 
-void dec_int_to_char(char value, char *str_number) {
-    int i = 0;
+void itoa(int value, char *str, int base) {
+    char *low;
+    if (base < 2 || base > 36) {
+        *str = '\0';
+        return;
+    }
+    if (value < 0 && base == 10)
+        *str = '-';
+    low = str;
     do {
-        str_number[i++] = value % 10 + '0';
-    } while ((value /= 10) > 0);
-    str_number[i] = '\0';
-    reverse(str_number);
+        *str++ = "0123456789abcdefghijklmnopqrstuvwxyz"[abs(value) % base];
+        value /= base;
+    } while(value);
+    *str-- = '\0';
+    while (low < str) {
+        char tmp = *low;
+        *low++ = *str;
+        *str-- = tmp;
+    }
 }
 
 void *memcopy(char *dst, char *src, int n) {
