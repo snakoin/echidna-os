@@ -20,6 +20,10 @@ struct gdtr {
     u32 base ;
 } __attribute__ ((packed));
 
+struct tss {
+
+} __attribute__ ((packed));
+
 void init_gdt_desc(u32, u32, u8, u8, struct gdtdesc *);
 void init_gdt(void);
 
