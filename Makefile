@@ -28,9 +28,9 @@ CPPFLAGS=-O2 -I$(INCLUDE) -fexec-charset=850 -std=c++17
 all: $(NAME).iso
 
 run: all
-	qemu-system-x86_64 -drive file=$(NAME).iso,format=raw -full-screen
+	qemu-system-x86_64 -drive file=$(NAME).iso,format=raw
 $(NAME).iso: $(BOOT_FILE)/$(NAME).bin
-	grub-mkrescue -o $@ $(ISO)/ 2> /dev/null
+	@grub-mkrescue -o $@ $(ISO)/ 2> /dev/null
 
 $(BOOT_FILE)/$(NAME).bin: $(OBJ_FILES)
 	$(LD) -n -o $@ -T linker.ld $^
