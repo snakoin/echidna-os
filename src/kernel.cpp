@@ -3,10 +3,12 @@
 #include "idt.h"
 #include "io.h"
 #include "std.h"
+#include "banner.h"
 
 #define KERNEL_INFOS 0b00001110
 #define KERNEL_DEFAULT 0b00001111
 #define KERNEL_ERRORS 0b00001100
+
 #define GIT_ADDRESS "https://github.com/Filadelphila/echidna-os"
 
 void init_pic();
@@ -35,16 +37,14 @@ extern "C" void kernel_start() {
 }
 
 void task_1(void) {
-    //while(1);
+    while(1);
     return;
 }
 
 void kernel_main() {
     Screen::Terminal terminal;
 
-    //sti;
-    terminal.print_string("kernel: allowing interrupt\n", KERNEL_INFOS);
-
+    terminal.print_string(BANNER, 0b00101111);
     terminal.print_string("Find EchidnaOS project on " GIT_ADDRESS "\n", KERNEL_DEFAULT);
 
     memcopy((char *) 0x30000, (char *) &task_1, 100);
