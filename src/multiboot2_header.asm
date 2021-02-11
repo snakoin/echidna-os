@@ -1,16 +1,16 @@
 .section .multiboot2_header
 header_start:
-    .long 0xe85250d6   # magic number
-    .long 0    # protected mode code
-    .long header_end - header_start    # header_length
+    .long 0xe85250d6 # magic number
+    .long 0 # protected mode code
+    .long header_end - header_start # header_length
 
     # checksum
     .long 0x100000000 - (0xe85250d6 + 0 + (header_end - header_start))
 
     # required end tag
-    .int 0    # type
-    .int 0    # flags
-    .long 8    # size
+    .int 0 # type
+    .int 0 # flags
+    .long 8 # size
 header_end:
 
 # stack

@@ -3,6 +3,9 @@
 
 #include "types.h"
 
+void init_gdt_desc(u32, u32, u8, u8, struct gdtdesc *);
+void init_gdt(void);
+
 // segment descriptor
 struct gdtdesc {
     u16 lim0_15;
@@ -45,9 +48,6 @@ struct tss {
 #else
     extern struct tss default_tss;
 #endif
-
-void init_gdt_desc(u32, u32, u8, u8, struct gdtdesc *);
-void init_gdt(void);
 
 #ifdef __GDT__
     struct gdtdesc kgdt[GDTSIZE];

@@ -2,7 +2,9 @@
 
 int strlen(char *str) {
     int size = 0;
-    while (*str++ != '\0') size++;
+    while (*str++ != '\0') {
+        size++;
+    }
     return size;
 }
 
@@ -20,8 +22,9 @@ void itoa(int value, char *str, int base) {
         *str = '\0';
         return;
     }
-    if (value < 0 && base == 10)
+    if (value < 0 && base == 10) {
         *str = '-';
+    }
     low = str;
     do {
         *str++ = "0123456789abcdefghijklmnopqrstuvwxyz"[abs(value) % base];
@@ -37,6 +40,8 @@ void itoa(int value, char *str, int base) {
 
 void *memcopy(char *dst, char *src, int n) {
     char *p = dst;
-    while (n--) *dst++ = *src++;
+    while (n--) {
+        *dst++ = *src++;
+    }
     return p;
 }

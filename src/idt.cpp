@@ -6,6 +6,7 @@
 
 extern "C" void _asm_default_int(void);
 extern "C" void _asm_irq_0(void);
+extern "C" void _asm_irq_1(void);
 
 void init_idt_desc(u16 select, u32 offset, u16 type, struct idtdesc *desc) {
     desc->offset0_15 = (offset & 0xffff);
@@ -18,7 +19,8 @@ void init_idt(void) {
     for (int i = 0; i < IDT_SIZE; i++) {
         init_idt_desc(0x08, (u32) _asm_default_int, INT_GATE, &kidt[i]);
     }
-    init_idt_desc(0x08, (u32) _asm_irq_0, INT_GATE, &kidt[33]);
+    init_idt_desc(0x08, (u32) _asm_irq_0, INT_GATE, &kidt[32]);
+    init_idt_desc(0x08, (u32) _asm_irq_1, INT_GATE, &kidt[33]);
 
     kidtr.limite = IDT_SIZE * 8;
     kidtr.base = IDT_BASE;

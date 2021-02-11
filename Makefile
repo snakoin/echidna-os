@@ -1,4 +1,4 @@
-.PHONY: all run clean remake
+.PHONY: all run remake clean
 
 NAME:=EchidnaOs
 
@@ -27,8 +27,11 @@ CPPFLAGS=-O2 -I$(INCLUDE) -fexec-charset=850 -std=c++17
 
 all: $(NAME).iso
 
+remake: clean all
+
 run: all
 	qemu-system-x86_64 -drive file=$(NAME).iso,format=raw
+
 $(NAME).iso: $(BOOT_FILE)/$(NAME).bin
 	@grub-mkrescue -o $@ $(ISO)/ 2> /dev/null
 
@@ -41,9 +44,7 @@ $(OBJ)/%.o: $(SRC)/%.cpp
 $(OBJ)/%.o: $(SRC)/%.asm
 	$(AS) $^ -o $@
 
-remake: clean all
-
 clean:
-	rm $(OBJ)/* -f
-	rm $(NAME).iso -f
-	rm $(BOOT_FILE)/$(NAME).bin -f
+	rm $(OBJ)/* -fv
+	rm $(NAME).iso -fv
+	rm $(BOOT_FILE)/$(NAME).bin -fv

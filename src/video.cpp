@@ -8,7 +8,7 @@ using namespace Screen;
 
 void move_cursor(u8 x, u8 y) {
     u16 cursor_position;
-    cursor_position = y * 80 +x;
+    cursor_position = y * 80 + x;
     outb(0x3d4, 0xf);
     outb(0x3d5, (u8) cursor_position);
     outb(0x3d4, 0xe);
@@ -71,26 +71,41 @@ void Terminal::scroll_up(u8 n) {
         }
     }
     y -= n;
-    if (y < 0) y = 0;
+    if (y < 0) {
+        y = 0;
+    }
 }
 
 void Terminal::put_char(unsigned char c)
 {
-    if (c == '\n') {
-        x = 0;
-        y++;
-    } else if (c == '\t') {
-        x = x + 8 - (x % 8);
-    } else if (c == '\r') {
-        x = 0;
-    } else {
-        framebuffer[x * 2 + y * 2 * 80] = c;
-        framebuffer[x * 2 + y * 2 * 80 + 1] = Screen::attribute;
-        x++;
+    switch (c) {
+        case '\n':
+            x = 0;
+            y++;
+            break;
+        case '\t':
+            x = x + 8 - (x % 8);
+            break;
+        case '\r':
+            x = 0;
+            break;
+        case '\b':
+            x--;
+            break;
+        default:
+            framebuffer[x * 2 + y * 2 * 80] = c;
+            framebuffer[x * 2 + y * 2 * 80 + 1] = Screen::attribute;
+            x++;
+            break;
     }
     if (x >= 80) {
         x = 0;
         y++;
+    } else if (x < 0) {
+        if (y > 0) {
+            y--;
+            x = 80 - 1;
+        }
     }
     if (y > 24) {
         scroll_up(y - 24);
@@ -116,6 +131,6 @@ void Terminal::print_string(const char *str, unsigned char attribute) {
     Screen::attribute = previous_attribute;
 }
 
-void Terminal::show_cursor(void) {
+void Screen::show_cursor(void) {
     move_cursor(x, y);
 }
