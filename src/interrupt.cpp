@@ -1,8 +1,8 @@
-#include "types.h"
-#include "video.h"
-#include "io.h"
-#include "std.h"
-#include "keyboard.h"
+#include "types.hpp"
+#include "video.hpp"
+#include "io.hpp"
+#include "std.hpp"
+#include "keyboard.hpp"
 
 extern "C" void isr_default_int(void) {
     Screen::Terminal terminal;
@@ -11,6 +11,7 @@ extern "C" void isr_default_int(void) {
 }
 
 extern "C" void isr_clock_int(void) {
+    return;
     static int tic = 0;
     static int sec = 0;
     tic++;
@@ -39,6 +40,7 @@ extern "C" void isr_kbd_int(void) {
     i--;
 
     Screen::Terminal terminal;
+    terminal.print_string("key pressed\n");
     if (i < 0x80) {
         switch(i) {
             case 0x29:

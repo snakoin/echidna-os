@@ -1,4 +1,4 @@
-.section .multiboot2_header
+.section .multiboot2
 header_start:
     .long 0xe85250d6 # magic number
     .long 0 # protected mode code

@@ -1,8 +1,8 @@
 #define __IDT__
-#include "idt.h"
+#include "idt.hpp"
 
-#include "types.h"
-#include "std.h"
+#include "types.hpp"
+#include "std.hpp"
 
 extern "C" void _asm_default_int(void);
 extern "C" void _asm_irq_0(void);

@@ -1,8 +1,8 @@
-#include "types.h"
-#include "std.h"
+#include "types.hpp"
+#include "std.hpp"
 
 #define __GDT__
-#include "gdt.h"
+#include "gdt.hpp"
 
 void init_gdt_desc(u32 base, u32 limite, u8 acces, u8 other,
                    struct gdtdesc *desc)
@@ -21,7 +21,7 @@ void init_gdt(void)
 {
     default_tss.debug_flag = 0;
     default_tss.io_map = 0;
-    default_tss.esp0 = 0x200000;
+    default_tss.esp0 = 0x20000;
     default_tss.ss0 = 0x18;
 
     // segment descriptor init

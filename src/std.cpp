@@ -1,4 +1,4 @@
-#include "std.h"
+#include "std.hpp"
 
 int strlen(char *str) {
     int size = 0;

@@ -1,8 +1,8 @@
-#include "types.h"
-#include "io.h"
-#include "std.h"
+#include "types.hpp"
+#include "io.hpp"
+#include "std.hpp"
 
-#include "video.h"
+#include "video.hpp"
 
 using namespace Screen;
 
