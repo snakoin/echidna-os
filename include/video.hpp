@@ -1,7 +1,7 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-#include "types.h"
+#include "types.hpp"
 
 namespace Screen {
     void set_blink(bool blink);

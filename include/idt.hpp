@@ -1,4 +1,4 @@
-#include "types.h"
+#include "types.hpp"
 
 #define IDT_BASE 0x800
 #define IDT_SIZE 0xff

@@ -1,7 +1,7 @@
 #define GDTBASE 0
 #define GDTSIZE 0xff
 
-#include "types.h"
+#include "types.hpp"
 
 void init_gdt_desc(u32, u32, u8, u8, struct gdtdesc *);
 void init_gdt(void);
